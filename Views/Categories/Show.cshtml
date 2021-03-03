@@ -1,0 +1,54 @@
+﻿@model AGAB.Models.Category
+@{
+    /**/
+
+    ViewBag.Title = @Model.CategoryName;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<a class="btn btn-info" href="/Categories/Index">Back to categories</a>
+<br />
+<br />
+
+
+@if (ViewBag.esteAdmin)
+{
+
+
+    <a class="btn btn-success" href="/Categories/Edit/@Model.CategoryId">Edit category</a>
+    <br />
+    <br />
+
+    <form method="post" action="/Categories/Delete/@Model.CategoryId">
+
+        @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+        <button class="btn btn-success" type="submit">Delete category</button>
+
+    </form>
+
+    <br />
+    <hr />
+    <br />
+
+
+
+}
+<br />
+<br />
+@foreach (AGAB.Models.Article article in ViewBag.Articles)
+{
+    <div class="panel panel-article" style="box-shadow: 0 2px 6px #ccc;">
+        <div class="panel-heading article-heading" style="background-color:	#fbdf83;font-weight: bold;">
+            <span class="font-roboto article-title" style="">@article.Title</span>
+        </div>
+        @Html.Partial("ArticleInfo", article)
+        <div class="panel-footer" style="background-color:	#fbdf83;">
+            <a class="btn btn-sm btn-success full-width" style="background-color: #670464ff;" href="/Articles/Show/@article.Id">Show article</a>
+        </div>
+    </div>
+    <br />
+
+}
+
