@@ -1,0 +1,45 @@
+﻿@model AGAB.Models.ApplicationUser
+    @{
+
+    ViewBag.Title = "Show Users";
+}
+
+<ol class="breadcrumb">
+    <li><h3>@ViewBag.Title</h3></li>
+</ol>
+
+@foreach (var user in ViewBag.UsersList)
+{
+    <div class="panel-heading">Username: @user.UserName</div>
+
+    <div class="panel-body">
+
+        <i class="glyphicon glyphicon-envelope"></i> Email: <span class="label label-default">@user.Email</span>
+
+        <br /><br />
+
+        @if (@user.PhoneNumber != null)
+        {
+            <i class="glyphicon glyphicon-phone"></i>@:PhoneNumber:<span class="label label-default">@user.PhoneNumber</span>
+
+
+
+
+
+
+
+
+        }
+
+    </div>
+
+    <div class="panel-footer">
+
+        <a class="btn btn-sm btn-success" href="/Users/Edit/@user.Id"> Edit user</a>
+        <a class="btn btn-sm btn-success" href="/Users/Show/@user.Id"> Show user</a>
+
+    </div>
+
+    <br />
+    <br />
+}
