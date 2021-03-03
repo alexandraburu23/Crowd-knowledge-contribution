@@ -1,0 +1,166 @@
+﻿@model AGAB.Models.Article
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<br />
+<a class="btn btn-info" href="/Articles/Index">Back to articles</a>
+<a class="btn btn-info" href="/Categories/Index">Back to categories</a>
+<br />
+<br />
+
+<div class="panel panel-default" style="box-shadow: 0 2px 6px #ccc;">
+
+    <div class="panel-heading article-heading">
+        <span class="font-roboto article-title" style="font-weight: bold;">@Model.Title</span>
+    </div>
+
+    @Html.Partial("ArticleInfo", Model)
+<div class="panel-footer">
+
+    @if (ViewBag.afisareButoane == true && Model.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin)
+    {
+        if (ViewBag.esteAdmin || Model.UserId == ViewBag.utilizatorCurent || !Model.Protected)
+        {
+            <a class="btn btn-primary pull-left" href="/Articles/Edit/@Model.Id">Change article</a>
+        }
+    }
+
+        @if (ViewBag.afisareButoane == true && (ViewBag.esteEditor || ViewBag.esteAdmin))
+
+        {
+
+            if (Model.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin )
+            {
+                if (!Model.Protected)
+                {
+                    using (Html.BeginForm("Protect", "Articles", method: FormMethod.Post, routeValues: new { id = @Model.Id, change = @Model.Id, setProtected = true }))
+                    {
+                        <button class="btn btn-success pull-left" type="submit">Protect</button> }
+                }
+                else
+                {
+                    using (Html.BeginForm("Protect", "Articles", method: FormMethod.Post, routeValues: new { id = @Model.Id, change = @Model.Id, setProtected = false }))
+                    {
+                        <button class="btn btn-success pull-left" type="submit">Unprotect</button>}
+                }
+            }
+        }
+  
+
+        @if (ViewBag.afisareButoane == true && Model.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin)
+        {
+            using (Html.BeginForm(actionName: "Delete", controllerName: "Articles"))
+            {
+                @Html.Hidden("Id")
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-danger pull-right" type="submit">Delete article</button>
+            }
+
+            <div class="clearfix"></div>
+
+        }
+    </div>
+</div>
+
+@foreach (var cap in Model.Chapters)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading" style="font-weight: bold;">@cap.ChapterName</div>
+        <div class="panel-body">
+            <span class="article-content-title" style="font-weight: bold;">Chapter Content</span>
+            <br />
+            <div class="article-content-wrapper">
+                @cap.Content
+            </div>
+            <small class="pull-right">@cap.Data</small>
+        </div>
+        @if (ViewBag.afisareButoane == true && Model.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin)
+        {
+            <div class="panel-footer">
+                <a class="btn btn-success pull-left" style="margin:5px" href="/Chapters/Edit/@cap.ChapterId">Modify chapter</a>
+
+                @using (Html.BeginForm(actionName: "Delete", controllerName: "Chapters", method: FormMethod.Post, routeValues: new { id = @cap.ChapterId }))
+                {
+                    @Html.HttpMethodOverride(HttpVerbs.Delete)
+                    <button class="btn btn-danger pull-right" style="margin:5px" type="submit">Delete Chapter</button>
+                }
+                <div class="clearfix"></div>
+            </div>
+
+
+        }
+    </div>
+}
+@if (ViewBag.afisareButoane == true && Model.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin)
+{
+    <a class="btn btn-primary" href="/Chapters/New/@Model.Id">Add chapter</a>
+    <br />
+    <br />
+
+}
+<br />
+
+
+
+    @foreach (var comm in Model.Changes)
+    {
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div>
+                    <p>@comm.Content</p>
+                    <small class="pull-right">@comm.Date</small>
+                    <i class="glyphicon glyphicon-user"></i> <i>written by</i> <strong> @comm.User.UserName </strong>
+                </div>
+
+                @if (comm.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin || Model.UserId == ViewBag.utilizatorCurent)
+                {
+                    <div style="display: inline-block; float : left; margin-right: 15px">
+                        <a class="glyphicon glyphicon-pencil" href="/Changes/Edit/@comm.ChangeId"></a>
+                    </div>
+
+                    <div style="display: inline-block; float : left">
+                        <form method="post" action="/Changes/Delete/@comm.ChangeId">
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+                            <button class="glyphicon glyphicon-trash" style="border: none; background: transparent" type="submit"></button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    <div class="col-md-2"></div>
+    </div>
+    <hr />
+    }
+
+
+@if ( (ViewBag.utilizatorCurent!=null && Model.Protected == false) || ViewBag.esteAdmin || Model.UserId == ViewBag.utilizatorCurent)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <div class="panel">
+
+                    <form method="post" action="/Articles/Show/@Model.Id">
+                        <div class="panel-body">
+                            <input type="hidden" name="ArticleId" value="@Model.Id" />
+                            <label>Update content</label>
+                            <br />
+                            <textarea class="form-control" name="Content"></textarea>
+                            @Html.ValidationMessage("Content", "", new { @class = "text-danger" })
+                            <br />
+                            <button class="btn btn-success " type="submit">Add update</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+}

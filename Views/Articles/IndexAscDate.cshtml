@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "IndexAscDate";
+}
+
+<h2>News</h2>
+
+<hr />
+
+@if (TempData.ContainsKey("message"))
+{
+    <h3 class="alert alert-info" role="alert">@ViewBag.Message</h3>
+}
+
+@*----------------------------------------------------------------------------------------*@
+<div class="container">
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form class="card card-sm" method="GET">
+                <div class="card-body row no-gutters align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-search h4 text-body"></i>
+                    </div>
+                    <!--end of col-->
+
+                    <div class="col" style="width: 100%;">
+                        <input class="form-control form-control-lg form-control-borderless" type="text" name="search" value="@ViewBag.SearchString"
+                               placeholder="Search topics or keywords">
+                    </div>
+
+                    <!--end of col-->
+                    <br />
+                    <div class="col-auto">
+                        <button class="btn btn-info" type="submit">Search</button>
+                    </div>
+                    <!--end of col-->
+                </div>
+            </form>
+        </div>
+        <!--end of col-->
+    </div>
+</div>
+<br />
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+        Sort by
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="/Articles/OrderAscDate">Ascending by Date</a></li>
+        <li><a href="/Articles/OrderDescDate">Descending by Date</a></li>
+        <li><a href="/Articles/OrderAscAZ">A-Z</a></li>
+        <li><a href="/Articles/OrderDescAZ">Z-A</a></li>
+
+    </ul>
+</div>
+<br />
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                @if (ViewBag.search != "")
+                {<a href="/Articles/OrderAscDate?page=1&search=@ViewBag.SearchString" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                }
+                else
+                {
+                    <a href="/Articles/OrderAscDate?page=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                }
+            </li>
+            @for (int i = 1; i <= ViewBag.lastPage; i++)
+            {
+                if (ViewBag.search != "")
+                {
+                    <li><a href="/Articles/OrderAscDate?page=@i&search=@ViewBag.SearchString">@(i)</a></li>
+                }
+                else
+                {
+                    <li><a href="/Articles/OrderAscDate?page=@i">@(i)</a></li>
+                }
+            }
+            <li>
+                @if (ViewBag.search != "")
+                {
+                    <a href="/Articles/OrderAscDate?page=@(ViewBag.lastPage)&search=@ViewBag.SearchString" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                }
+                else
+                { <a href="/Articles/OrderAscDate?page=@(ViewBag.lastPage)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                }
+            </li>
+        </ul>
+    </nav>
+</div>
+<br /><br /><br />
+@*----------------------------------------------------------------------------------------*@
+
+@foreach (AGAB.Models.Article article in ViewBag.Articles)
+{
+    <div class="panel panel-article" style="box-shadow: 0 2px 6px #ccc;">
+        <div class="panel-heading article-heading" style="background-color:	#fbdf83;font-weight: bold;">
+            <span class="font-roboto article-title" style="">@article.Title</span>
+        </div>
+        @Html.Partial("ArticleInfo", article)
+        <div class="panel-footer" style="background-color:	#fbdf83;">
+            <a class="btn btn-sm btn-success full-width" style="background-color: #670464ff;" href="/Articles/Show/@article.Id">Show article</a>
+        </div>
+    </div>
+    <br />
+
+}
+
+
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="/Articles/OrderAscDate?page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.lastPage; i++)
+            {
+                <li><a href="/Articles/OrderAscDate?page=@i">@(i)</a></li>
+            }
+
+            <li>
+                <a href="/Articles/OrderAscDate?page=@(ViewBag.lastPage)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+

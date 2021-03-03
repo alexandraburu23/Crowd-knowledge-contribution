@@ -1,0 +1,34 @@
+﻿@model AGAB.Models.Article
+
+<h2>Add article</h2>
+
+@using (Html.BeginForm(actionName: "New", controllerName: "Articles"))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.Label("Title", "Article Title")
+    <br />
+    @Html.TextBox("Title", null, new { @class = "form-control" })
+
+    @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.Label("Content", "Content")
+    <br />
+    @Html.TextArea("Content", null, new { @class = "form-control summernote" })
+
+    @Html.ValidationMessage("Content", null, new { @class = "text-danger" })
+    <br />
+    <br />
+
+    <label>Select Category</label>
+    @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categ, "Value", "Text"),
+    "Select category", new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
+    <br />
+    <br />
+    <button class="btn btn-sm btn-success" type="submit">Post article</button>
+
+}
+
