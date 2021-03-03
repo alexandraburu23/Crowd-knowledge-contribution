@@ -1,0 +1,30 @@
+﻿@model AGAB.Models.Chapter
+
+
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Chapters"))
+{
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
+    @Html.HiddenFor(m => m.ArticleId)
+    @Html.HiddenFor(m => m.ChapterId)
+    <br />
+    @Html.Label("ChapterName", "Chapter Title")
+    <br />
+    @Html.Editor("ChapterName")
+    @Html.ValidationMessageFor(m => m.ChapterName, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.Label("Content", "Content")
+    <br />
+    @Html.EditorFor(m => m.Content)
+    @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.HiddenFor(m => m.Data)
+    <br />
+
+    <button class="btn btn-sm btn-success" type="submit">Modify Chapter</button>
+}
+
